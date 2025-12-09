@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { Shovel, Map, ChevronDown } from 'lucide-react';
 import GeminiImage from '../components/GeminiImage';
@@ -18,8 +20,9 @@ const Home: React.FC<HomeProps> = ({ onStart }) => {
             className="w-full h-full"
             autoGenerate={true}
             aspectRatio="16:9"
+            variant="background" // Fail silently if quota exceeded
         />
-        {/* CSS Fallback in case GeminiImage fails to load */}
+        {/* CSS Fallback */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-mud-primary/20 via-stone-900 to-black"></div>
       </div>
 
@@ -37,10 +40,7 @@ const Home: React.FC<HomeProps> = ({ onStart }) => {
             <div className="absolute inset-0 bg-mud-primary blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
             <div className="w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-mud-primary to-clay rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative animate-float transition-transform duration-500 group-hover:scale-105">
                 <div className="w-full h-full dark:bg-earth-core bg-journal-paper rounded-full flex items-center justify-center border-4 dark:border-stone-800 border-stone-200 overflow-hidden relative">
-                     {/* Inner spinny thing */}
                      <div className="absolute inset-0 border-[6px] border-dashed border-mud-primary/20 rounded-full animate-spin-[20s_linear_infinite]"></div>
-                     
-                     {/* Custom Ammonite Logo */}
                      <div className="w-16 h-16 md:w-24 md:h-24 relative z-10 animate-pulse-slow drop-shadow-md text-mud-primary">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
                             <path d="M20.2 14.6l-1.6.9c-1.3.8-2.9 1.1-4.4.8-1.6-.4-2.9-1.4-3.7-2.9-.8-1.5-.8-3.3 0-4.8.9-1.5 2.5-2.5 4.2-2.5h.3" />
@@ -73,18 +73,13 @@ const Home: React.FC<HomeProps> = ({ onStart }) => {
           onClick={onStart}
           className="group relative inline-flex items-center justify-center px-16 py-6 text-lg font-bold dark:text-earth-core text-journal-bg bg-mud-primary hover:bg-mud-accent transition-all duration-300 clip-path-polygon shadow-[0_0_30px_rgba(217,119,6,0.3)] hover:shadow-[0_0_60px_rgba(217,119,6,0.6)] hover:-translate-y-1 overflow-hidden"
         >
-          {/* Light sweep effect */}
           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-          
           <Shovel className="w-6 h-6 mr-3 group-hover:rotate-45 transition-transform relative z-10" />
           <span className="relative z-10 tracking-widest">BEGIN EXCAVATION</span>
-          
-          {/* Button Tech Corners */}
           <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 dark:border-earth-core border-white"></div>
           <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 dark:border-earth-core border-white"></div>
         </button>
 
-        {/* Floating Era Indicators */}
         <div className="mt-24 grid grid-cols-3 gap-12 w-full max-w-lg opacity-60 hover:opacity-100 transition-opacity duration-500">
            {['Triassic', 'Jurassic', 'Cretaceous'].map((era, i) => (
              <div key={era} className="flex flex-col items-center gap-3 group cursor-default">

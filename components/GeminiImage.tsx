@@ -10,6 +10,7 @@ interface GeminiImageProps {
   className?: string;
   autoGenerate?: boolean;
   aspectRatio?: '1:1' | '16:9' | '4:3' | '3:4' | '9:16';
+  variant?: 'default' | 'background'; // 'background' fails silently (transparent)
 }
 
 // 1. In-Memory Cache (Fastest, per session)
@@ -34,7 +35,7 @@ const getFromStorage = (key: string): string | null => {
     }
 };
 
-const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", autoGenerate = true, aspectRatio = '1:1' }) => {
+const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", autoGenerate = true, aspectRatio = '1:1', variant = 'default' }) => {
   const cacheKey = `${prompt}_${aspectRatio}`;
   
   // Try memory -> try storage -> null
@@ -49,7 +50,6 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
 
   // LAZY LOAD: Intersection Observer
   useEffect(() => {
-    // If we already have the image, no need to observe
     if (imageUrl) {
         setIsVisible(true);
         return;
@@ -60,7 +60,7 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
             setIsVisible(true);
             observer.disconnect();
         }
-    }, { rootMargin: '200px' }); // Load when item is 200px away from viewport
+    }, { rootMargin: '200px' });
 
     if (containerRef.current) {
         observer.observe(containerRef.current);
@@ -70,7 +70,6 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
   }, [imageUrl]);
 
   const fetchImage = async () => {
-    // Double check cache before fetching (in case another component fetched it meanwhile)
     const currentCache = memoryCache[cacheKey] || getFromStorage(cacheKey);
     if (currentCache) {
         setImageUrl(currentCache);
@@ -80,7 +79,6 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
     setLoading(true);
     setError(false);
     
-    // Add a small artificial delay to prevent flicker
     if (error) await new Promise(r => setTimeout(r, 500));
 
     const result = await generateImage(prompt, aspectRatio);
@@ -102,8 +100,14 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
     }
   }, [prompt, autoGenerate, aspectRatio, isVisible]);
 
-  // FALLBACK UI: If error (e.g. Quota Exceeded), show a stylized placeholder
+  // ERROR STATE HANDLING
   if (error) {
+    // If it's a background image, render NOTHING so the CSS fallback shows through.
+    if (variant === 'background') {
+        return <div className={`relative ${className} hidden`} />;
+    }
+
+    // Default error card for main content
     return (
       <div ref={containerRef} className={`relative flex flex-col items-center justify-center dark:bg-stone-900 bg-stone-200 overflow-hidden group ${className}`}>
          <div className="absolute inset-0 opacity-10 dark:bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
@@ -130,10 +134,14 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
     return (
       <div ref={containerRef} className={`flex flex-col items-center justify-center dark:bg-earth-core bg-white relative overflow-hidden ${className}`}>
         <div className="absolute inset-0 dark:bg-dirt-pattern bg-paper-texture opacity-20"></div>
-        <Loader2 size={24} className="text-mud-primary animate-spin z-10" />
-        <span className="text-mud-primary/70 text-[9px] font-mono mt-2 uppercase tracking-widest z-10 animate-pulse">
-            Reconstructing...
-        </span>
+        {variant !== 'background' && (
+            <>
+                <Loader2 size={24} className="text-mud-primary animate-spin z-10" />
+                <span className="text-mud-primary/70 text-[9px] font-mono mt-2 uppercase tracking-widest z-10 animate-pulse">
+                    Reconstructing...
+                </span>
+            </>
+        )}
       </div>
     );
   }
@@ -145,10 +153,14 @@ const GeminiImage: React.FC<GeminiImageProps> = ({ prompt, alt, className = "", 
             onClick={(e) => { e.stopPropagation(); fetchImage(); }}
             className={`cursor-pointer flex flex-col items-center justify-center dark:bg-earth-mid bg-stone-50 hover:dark:bg-earth-dark hover:bg-stone-100 transition-colors border dark:border-stone-800 border-stone-200 group ${className}`}
          >
-             <div className="w-12 h-12 rounded-full border-2 border-mud-primary/30 flex items-center justify-center group-hover:border-mud-primary group-hover:scale-110 transition-all">
-                <RefreshCw className="text-mud-primary/50 group-hover:text-mud-primary" size={20} />
-             </div>
-             <span className="mt-3 text-stone-500 text-[10px] font-mono uppercase group-hover:text-mud-primary tracking-wider">Initialize</span>
+            {variant !== 'background' && (
+                <>
+                    <div className="w-12 h-12 rounded-full border-2 border-mud-primary/30 flex items-center justify-center group-hover:border-mud-primary group-hover:scale-110 transition-all">
+                        <RefreshCw className="text-mud-primary/50 group-hover:text-mud-primary" size={20} />
+                    </div>
+                    <span className="mt-3 text-stone-500 text-[10px] font-mono uppercase group-hover:text-mud-primary tracking-wider">Initialize</span>
+                </>
+            )}
          </div>
      )
   }

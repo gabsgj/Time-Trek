@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { Era, Creature } from '../types';
 import { CREATURES } from '../constants';
@@ -21,7 +23,7 @@ const EraExplorer: React.FC<EraExplorerProps> = ({ era, onSelectCreature }) => {
   });
 
   return (
-    <div className="pt-24 pb-48 min-h-screen relative dark:bg-earth-core bg-journal-bg transition-colors duration-500">
+    <div className="pt-24 pb-28 min-h-screen relative dark:bg-earth-core bg-journal-bg transition-colors duration-500">
        
        {/* Generated Atmosphere Background */}
        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none fixed">
@@ -31,6 +33,7 @@ const EraExplorer: React.FC<EraExplorerProps> = ({ era, onSelectCreature }) => {
             className="w-full h-full grayscale dark:grayscale-0 scale-110 blur-sm"
             autoGenerate={true}
             aspectRatio="16:9"
+            variant="background" // Fail silently
           />
        </div>
 
@@ -121,13 +124,13 @@ const EraExplorer: React.FC<EraExplorerProps> = ({ era, onSelectCreature }) => {
                       </div>
                       
                       {/* AI GENERATED FOSSIL THUMBNAIL */}
-                      {/* Using 16:9 ratio and "wide shot" prompt to prevent cropping heads/tails */}
                       <GeminiImage 
                         prompt={`Wide shot of a complete fossilized skeleton of ${creature.name} fully visible embedded in a stone slab, museum specimen, centered, high detail`} 
                         alt={`${creature.name} Fossil`}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100 sepia-[.3] group-hover:sepia-0"
                         autoGenerate={true}
                         aspectRatio="16:9"
+                        // Keep variant default here as we want to see errors for content
                       />
                       
                       {/* Overlay Gradient */}
