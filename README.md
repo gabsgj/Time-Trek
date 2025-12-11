@@ -18,7 +18,6 @@ View your app in AI Studio: https://ai.studio/apps/drive/1N6k4bSVS-d6pJtLvcRVCI8
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
-<img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/33329c9b-4017-4774-85af-9aa374e36863" />
 <img width="1919" height="993" alt="Image" src="https://github.com/user-attachments/assets/d7566957-9388-4b2e-97d2-adf162cfc530" />
 <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/9e26285c-43a2-4072-8f53-c052cc6b8ab3" />
 <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/954b5be9-b444-4a8f-91b8-90add0ac25d9" />
@@ -30,3 +29,4 @@ View your app in AI Studio: https://ai.studio/apps/drive/1N6k4bSVS-d6pJtLvcRVCI8
 <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/727c1271-80a6-46e0-a1e8-aabd777656a3" />
 <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/9ef5a5d1-dff5-47b3-8770-ef5389dde5a8" />
 <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/9af6b70a-6c42-4f1c-86fa-7a5dab6a8221" />
+<img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/33329c9b-4017-4774-85af-9aa374e36863" />
